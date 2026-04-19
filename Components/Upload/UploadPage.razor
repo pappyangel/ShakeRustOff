@@ -1,0 +1,50 @@
+@page "/upload"
+@rendermode InteractiveServer
+@inject ILogger<UploadPage> Logger
+
+<PageTitle>File Upload</PageTitle>
+
+<div class="container mt-5">
+    <h2>File Upload</h2>
+    <div class="mb-3">
+        <InputFile OnChange="OnFileSelected" class="form-control" />
+    </div>
+    @if (!string.IsNullOrEmpty(SelectedFileName))
+    {
+        <div class="alert alert-info" role="alert">
+            Selected file: @SelectedFileName
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(UploadMessage))
+    {
+        <div class="alert alert-success" role="alert">
+            @UploadMessage
+        </div>
+    }
+    <button class="btn btn-primary" @onclick="OnUpload" disabled="@(!CanUpload)">
+        <i class="fluent-icons-upload-24-filled me-2"></i>Upload
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Confirm Upload</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(ImagePreviewUrl))
+                {
+                    <img src="@ImagePreviewUrl" class="img-fluid mb-3" alt="Image preview" />
+                }
+                <p>Are you sure you want to upload "@SelectedFileName"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" @onclick="OnConfirmUpload" data-bs-dismiss="modal">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
